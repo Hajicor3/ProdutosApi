@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: apiprodutos
+  profiles:
+    active:
+      - "dev"
+server:
+  port: 8080
+
+
+
