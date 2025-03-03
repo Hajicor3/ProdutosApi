@@ -2,7 +2,6 @@ package com.example.demo.services;
 
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -10,7 +9,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entities.Fornecedor;
-import com.example.demo.entities.dtos.FornecedorMenorDto;
+import com.example.demo.entities.dtos.FornecedorRequest;
+import com.example.demo.entities.dtos.FornecedorResponse;
 import com.example.demo.repositories.FornecedorRepository;
 import com.example.demo.services.exceptions.DataBaseException;
 import com.example.demo.services.exceptions.ResourceNotFoundException;
@@ -23,21 +23,38 @@ public class FornecedorService {
 	@Autowired
 	private FornecedorRepository fornecedorRepository;
 	
-	public Fornecedor salvarFornecedor(Fornecedor fornecedor) {
+	public Fornecedor salvarFornecedor(FornecedorRequest fornecedorDto) {
+		Fornecedor fornecedor = new Fornecedor(fornecedorDto.getNome());
 		return fornecedorRepository.save(fornecedor);
 	}
 	
-	public Fornecedor buscarFornecedores(Long id){
-		Optional<Fornecedor> fornecedor = fornecedorRepository.findById(id);
-		return fornecedor.orElseThrow(() -> new ResourceNotFoundException(id));
+	public FornecedorResponse buscarFornecedores(Long id){
+		
+		try {
+		Fornecedor fornecedor = fornecedorRepository.getReferenceById(id);
+		return FornecedorResponse
+				.builder()
+				.nome(fornecedor.getNome())
+				.id(fornecedor.getId())
+				.produtos(fornecedor.getProdutos())
+				.build();
+		}
+		catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 	
-	public List<FornecedorMenorDto> listaDeFornecedores(){
-		List<FornecedorMenorDto> fornecedoresDto = fornecedorRepository.findAll().stream().map(x -> new FornecedorMenorDto(x.getNome())).toList();
+	public List<FornecedorRequest> listaDeFornecedores(){
+		List<FornecedorRequest> fornecedoresDto = fornecedorRepository.findAll().stream().map(x -> FornecedorRequest
+				.builder()
+				.id(x.getId())
+				.nome(x.getNome())
+				.build())
+				.toList();
 		return fornecedoresDto;
 	}
 	
-	public void atualizar(Long id, FornecedorMenorDto novo) {
+	public void atualizar(Long id, FornecedorRequest novo) {
 		try {
 		Fornecedor old = fornecedorRepository.getReferenceById(id);
 		update(old, novo);
@@ -65,7 +82,7 @@ public class FornecedorService {
 		}
 	}
 	
-	private void update(Fornecedor old, FornecedorMenorDto novo) {
+	private void update(Fornecedor old, FornecedorRequest novo) {
 		
 		old.setNome(novo.getNome());
 	}

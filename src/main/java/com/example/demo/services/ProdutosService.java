@@ -1,6 +1,6 @@
 package com.example.demo.services;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.entities.Fornecedor;
 import com.example.demo.entities.Produto;
-import com.example.demo.entities.dtos.ProdutoDto;
-import com.example.demo.entities.dtos.ProdutoModelDto;
+import com.example.demo.entities.dtos.ProdutoRequest;
+import com.example.demo.entities.dtos.ProdutoResponse;
 import com.example.demo.repositories.FornecedorRepository;
 import com.example.demo.repositories.ProdutosRepository;
 import com.example.demo.services.exceptions.DataBaseException;
@@ -26,7 +26,7 @@ public class ProdutosService {
 	@Autowired
 	private FornecedorRepository fornecedorRepository;
 
-	public Produto salvar(ProdutoDto produto) {
+	public Produto salvar(ProdutoRequest produto) {
 		try {
 		Fornecedor fornecedor = fornecedorRepository.getReferenceById(produto.getFornecedorId());
 		Produto novoProduto = new Produto(
@@ -42,9 +42,33 @@ public class ProdutosService {
 		}
 	}
 	
-	public Produto produtoPorId(Long id) {
-		Optional<Produto> produto = ProdutosRepository.findById(id);
-		return produto.orElseThrow(() -> new ResourceNotFoundException(id));
+	public ProdutoResponse produtoPorId(Long id) {
+		try {
+		Produto produto = ProdutosRepository.getReferenceById(id);
+		return ProdutoResponse
+				.builder()
+				.data(produto.getData())
+				.finalidade(produto.getFinalidade())
+				.nomeProduto(produto.getNomeProduto())
+				.status(produto.getStatus())
+				.id(produto.getId())
+				.build();
+		}
+		catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
+	}
+	
+	public List<ProdutoResponse> resgatarListaDeProdutos(){
+		List<ProdutoResponse> produtos = ProdutosRepository.findAll().stream().map(x -> ProdutoResponse
+				.builder()
+				.data(x.getData())
+				.finalidade(x.getFinalidade())
+				.id(x.getId())
+				.nomeProduto(x.getNomeProduto())
+				.status(x.getStatus())
+				.build()).toList();
+		return produtos;
 	}
 	
 	public void excluirProduto(Long id) {
@@ -63,7 +87,7 @@ public class ProdutosService {
 		}
 	}
 	
-	public void updateProduto(Long id,ProdutoModelDto novo) {
+	public void updateProduto(Long id,ProdutoResponse novo) {
 		try {
 		Produto old = ProdutosRepository.getReferenceById(id);
 		update(old, novo);
@@ -74,7 +98,7 @@ public class ProdutosService {
 		}
 	}
 	
-	private void update(Produto old, ProdutoModelDto novo) {
+	private void update(Produto old, ProdutoResponse novo) {
 		old.setFinalidade(novo.getFinalidade());
 		old.setNomeProduto(novo.getNomeProduto());
 		old.setStatus(novo.getStatus());

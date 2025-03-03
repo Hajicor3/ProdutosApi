@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ProdutoDto {
+public class ProdutoRequest {
 	
 	private String nomeProduto;
 	private Status status;

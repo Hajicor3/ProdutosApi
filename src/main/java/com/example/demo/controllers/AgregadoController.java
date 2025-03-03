@@ -6,16 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.demo.entities.Agregado;
-import com.example.demo.entities.dtos.AgregadoModelDto;
+import com.example.demo.entities.dtos.AgregadoResponse;
 import com.example.demo.services.AgregadoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,8 +49,8 @@ public class AgregadoController {
 			@ApiResponse(responseCode = "200", description = "Retorna um agregado"),
 			@ApiResponse(responseCode = "404", description = "Não existe agregado no id informado")
 	})
-	@GetMapping(params = "id")
-	public ResponseEntity<Agregado> buscarPorId(@RequestParam Long id) {
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<Agregado> buscarPorId(@PathVariable Long id) {
 		Agregado agregador = agregadoService.BuscarId(id);
 		
 		return ResponseEntity.ok().body(agregador);
@@ -62,8 +62,8 @@ public class AgregadoController {
 			@ApiResponse(responseCode = "404", description = "Não existe agregado no id informado"),
 			@ApiResponse(responseCode = "400", description = "Parametros inválidos")
 	})
-	@PutMapping(params = "id")
-	public ResponseEntity<Agregado> atualizarAgreagado(@RequestParam Long id, @RequestBody AgregadoModelDto agregado){
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<Agregado> atualizarAgreagado(@PathVariable Long id, @RequestBody AgregadoResponse agregado){
 		agregadoService.atualizar(id, agregado);
 		return ResponseEntity.noContent().build();	
 	}
@@ -74,8 +74,8 @@ public class AgregadoController {
 			@ApiResponse(responseCode = "404", description = "Não existe agregado no id informado"),
 			@ApiResponse(responseCode = "400", description = "Parametros inválidos")
 	})
-	@DeleteMapping(params = "id")
-	public ResponseEntity<Void> deleteAgregador(@RequestParam Long id){
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> deleteAgregador(@PathVariable Long id){
 		agregadoService.delete(id);
 		return ResponseEntity.noContent().build();
 	}

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class AgregadoModelDto {
+public class AgregadoResponse {
 	private Double densidade;
 	private Integer percentual;
 }
