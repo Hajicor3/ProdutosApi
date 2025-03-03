@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,10 +31,12 @@ public class Fornecedor implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Schema
 	private Long id;
 	private String nome;
 	
 	@OneToMany(mappedBy = "fornecedor",cascade = CascadeType.ALL,orphanRemoval = true)
+	@Schema(hidden = true)
 	private List<Produto> produtos = new ArrayList<>();
 	
 	public Fornecedor(String nome) {
