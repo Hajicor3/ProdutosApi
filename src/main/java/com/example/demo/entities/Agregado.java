@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,6 +33,7 @@ public class Agregado implements Serializable {
 	private Integer percentual;
 	@OneToOne
 	@JoinColumn(name = "produto_id")
+	@Schema(example = "produtoId")
 	private Produto produto;
 	
 	public Agregado(Double densidade, Integer percentual, Produto produto) {

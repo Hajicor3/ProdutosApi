@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.demo.entities.Agregado;
+import com.example.demo.entities.dtos.AgregadoModelDto;
 import com.example.demo.services.AgregadoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,7 +63,7 @@ public class AgregadoController {
 			@ApiResponse(responseCode = "400", description = "Parametros inválidos")
 	})
 	@PutMapping(params = "id")
-	public ResponseEntity<Agregado> atualizarAgreagado(@RequestParam Long id, @RequestBody Agregado agregado){
+	public ResponseEntity<Agregado> atualizarAgreagado(@RequestParam Long id, @RequestBody AgregadoModelDto agregado){
 		agregadoService.atualizar(id, agregado);
 		return ResponseEntity.noContent().build();	
 	}

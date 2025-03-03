@@ -71,7 +71,7 @@ public class FornecedorController {
 			@ApiResponse(responseCode = "400", description = "Parametros inválidos")
 	})
 	@PutMapping(params = "id")
-	public ResponseEntity<Fornecedor> atualizarFornecedor(@RequestParam Long id,@RequestBody Fornecedor fornecedor){
+	public ResponseEntity<Fornecedor> atualizarFornecedor(@RequestParam Long id,@RequestBody FornecedorMenorDto fornecedor){
 		fornecedorService.atualizar(id, fornecedor);
 		return ResponseEntity.noContent().build();
 	}

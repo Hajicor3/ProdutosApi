@@ -7,10 +7,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ProdutoDto {
-	
+public class ProdutoModelDto {
+
 	private String nomeProduto;
 	private Status status;
 	private String finalidade;
-	private Long fornecedorId;
 }

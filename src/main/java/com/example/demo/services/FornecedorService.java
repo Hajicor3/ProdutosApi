@@ -37,7 +37,7 @@ public class FornecedorService {
 		return fornecedoresDto;
 	}
 	
-	public void atualizar(Long id, Fornecedor novo) {
+	public void atualizar(Long id, FornecedorMenorDto novo) {
 		try {
 		Fornecedor old = fornecedorRepository.getReferenceById(id);
 		update(old, novo);
@@ -65,7 +65,7 @@ public class FornecedorService {
 		}
 	}
 	
-	private void update(Fornecedor old, Fornecedor novo) {
+	private void update(Fornecedor old, FornecedorMenorDto novo) {
 		
 		old.setNome(novo.getNome());
 	}

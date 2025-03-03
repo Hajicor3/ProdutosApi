@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entities.Fornecedor;
 import com.example.demo.entities.Produto;
 import com.example.demo.entities.dtos.ProdutoDto;
+import com.example.demo.entities.dtos.ProdutoModelDto;
 import com.example.demo.repositories.FornecedorRepository;
 import com.example.demo.repositories.ProdutosRepository;
 import com.example.demo.services.exceptions.DataBaseException;
@@ -62,7 +63,7 @@ public class ProdutosService {
 		}
 	}
 	
-	public void updateProduto(Long id,Produto novo) {
+	public void updateProduto(Long id,ProdutoModelDto novo) {
 		try {
 		Produto old = ProdutosRepository.getReferenceById(id);
 		update(old, novo);
@@ -73,7 +74,7 @@ public class ProdutosService {
 		}
 	}
 	
-	private void update(Produto old, Produto novo) {
+	private void update(Produto old, ProdutoModelDto novo) {
 		old.setFinalidade(novo.getFinalidade());
 		old.setNomeProduto(novo.getNomeProduto());
 		old.setStatus(novo.getStatus());

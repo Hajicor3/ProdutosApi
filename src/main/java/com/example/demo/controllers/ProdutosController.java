@@ -16,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.demo.entities.Produto;
 import com.example.demo.entities.dtos.ProdutoDto;
+import com.example.demo.entities.dtos.ProdutoModelDto;
 import com.example.demo.services.ProdutosService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,7 +63,7 @@ public class ProdutosController {
 			@ApiResponse(responseCode = "400", description = "Parametros inválidos")
 	})
 	@PutMapping(params = "id")
-	public ResponseEntity<Produto> atualizarProduto(@RequestParam Long id, @RequestBody Produto produto){
+	public ResponseEntity<Produto> atualizarProduto(@RequestParam Long id, @RequestBody ProdutoModelDto produto){
 		
 		ProdutosService.updateProduto(id, produto);
 		return ResponseEntity.noContent().build();

@@ -8,6 +8,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entities.Agregado;
+import com.example.demo.entities.dtos.AgregadoModelDto;
 import com.example.demo.repositories.AgregadorRepository;
 import com.example.demo.services.exceptions.DataBaseException;
 import com.example.demo.services.exceptions.ResourceNotFoundException;
@@ -47,7 +48,7 @@ public class AgregadoService {
 			}
 	}
 	
-	public void atualizar(Long id, Agregado novo) {
+	public void atualizar(Long id, AgregadoModelDto novo) {
 		try {
 			Agregado old = agregadoRepository.getReferenceById(id);
 			update(old, novo);
@@ -58,7 +59,7 @@ public class AgregadoService {
 		}
 	}
 	
-	private void update(Agregado old, Agregado novo) {
+	private void update(Agregado old, AgregadoModelDto novo) {
 		old.setDensidade(novo.getDensidade());
 		old.setPercentual(novo.getPercentual());
 	}
