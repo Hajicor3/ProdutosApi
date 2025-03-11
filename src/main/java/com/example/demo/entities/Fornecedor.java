@@ -6,6 +6,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,6 +30,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@FilterDef(name = "softDeleteFilter", parameters = @ParamDef(name = "isDeleted", type = Boolean.class))
+@Filter(name = "softDeleteFilter", condition = "deleted = :isDeleted")
 public class Fornecedor implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -34,7 +40,9 @@ public class Fornecedor implements Serializable {
 	@Schema
 	private Long id;
 	private String nome;
+	private Boolean deleted = false;
 	
+	@Filter(name = "softDeleteFilter", condition = "deleted = :isDeleted")
 	@OneToMany(mappedBy = "fornecedor",cascade = CascadeType.ALL,orphanRemoval = true)
 	@Schema(hidden = true)
 	private List<Produto> produtos = new ArrayList<>();
@@ -67,5 +75,10 @@ public class Fornecedor implements Serializable {
 	
 	public List<Produto> getProdutos(){
 		return Collections.unmodifiableList(produtos);
+	}
+	
+	public void softDeleted() {
+		this.deleted = true;
+		produtos.forEach(x -> x.setDeleted(true));
 	}
 }

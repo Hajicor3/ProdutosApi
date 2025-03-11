@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.demo.entities.Movimentacao;
 import com.example.demo.entities.Produto;
 import com.example.demo.entities.dtos.MovimentacaoRequest;
 import com.example.demo.entities.dtos.ProdutoRequest;
@@ -48,10 +49,10 @@ public class ProdutosController {
 	}
 	
 	@PostMapping(value = "/movimentacao")
-	public ResponseEntity<Void> registrarMovimentacaoDeProduto(@RequestBody MovimentacaoRequest movimentacaoRequest){
-		produtosService.registrarMovimentacao(movimentacaoRequest);
+	public ResponseEntity<Movimentacao> registrarMovimentacaoDeProduto(@RequestBody MovimentacaoRequest movimentacaoRequest){
+		var mov = produtosService.registrarMovimentacao(movimentacaoRequest);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
-		return ResponseEntity.created(uri).build();
+		return ResponseEntity.created(uri).body(mov);
 	}
 
 	@Operation(description = "Resgata um produto do banco de dados pelo id.")

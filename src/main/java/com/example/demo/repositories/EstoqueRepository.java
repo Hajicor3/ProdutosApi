@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.example.demo.entities.Movimentacao;
 import com.example.demo.entities.dtos.EstoqueRequest;
 import com.example.demo.entities.dtos.MovimentacaoRequest;
 
@@ -16,9 +17,9 @@ public interface EstoqueRepository {
 	@PostMapping("/estoques")
 	public EstoqueRequest salvarEstoque(@RequestBody EstoqueRequest estoque);
 	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deletarEstoquePorIdProduto(@PathVariable("id") Long idProduto);
+	@DeleteMapping("estoques/{id}")
+	public ResponseEntity<Void> deletarEstoquePorIdProduto(@PathVariable Long id);
 	
 	@PostMapping("/movimentacoes")
-	public ResponseEntity<Void> salvarMovimentacao(MovimentacaoRequest movimentacaoRequest);
+	public ResponseEntity<Movimentacao> salvarMovimentacao(MovimentacaoRequest movimentacaoRequest);
 }

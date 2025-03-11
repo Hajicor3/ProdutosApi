@@ -9,6 +9,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entities.Fornecedor;
+import com.example.demo.entities.Movimentacao;
 import com.example.demo.entities.Produto;
 import com.example.demo.entities.dtos.EstoqueRequest;
 import com.example.demo.entities.dtos.MovimentacaoRequest;
@@ -58,9 +59,10 @@ public class ProdutosService {
 		}
 	}
 	
-	public void registrarMovimentacao(MovimentacaoRequest movimentacaoRequest) {
+	public Movimentacao registrarMovimentacao(MovimentacaoRequest movimentacaoRequest) {
 		
-		estoqueRepository.salvarMovimentacao(movimentacaoRequest);
+		var mov = estoqueRepository.salvarMovimentacao(movimentacaoRequest).getBody();
+		return mov;
 	}
 	
 	public ProdutoResponse produtoPorId(Long id) {
@@ -76,6 +78,9 @@ public class ProdutosService {
 				.build();
 		}
 		catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
+		catch(NullPointerException e) {
 			throw new ResourceNotFoundException(id);
 		}
 	}
@@ -95,11 +100,9 @@ public class ProdutosService {
 	public void excluirProduto(Long id) {
 		try {
 			
-			if(!ProdutosRepository.existsById(id)) {
-				throw new ResourceNotFoundException(id);
-			}
+			Produto prod = ProdutosRepository.getReferenceById(id);
 			estoqueRepository.deletarEstoquePorIdProduto(id);
-			ProdutosRepository.deleteById(id);
+			ProdutosRepository.delete(prod);
 		}
 		catch(EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);

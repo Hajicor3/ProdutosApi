@@ -42,6 +42,9 @@ public class FornecedorService {
 		catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
 		}
+		catch(NullPointerException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 	
 	public List<FornecedorRequest> listaDeFornecedores(){
@@ -72,7 +75,9 @@ public class FornecedorService {
 				throw new ResourceNotFoundException(id);
 			}
 			
-			fornecedorRepository.deleteById(id);
+			var fornecedor = fornecedorRepository.getReferenceById(id);
+			fornecedor.softDeleted();
+			fornecedorRepository.save(fornecedor);
 		}
 		catch(EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);

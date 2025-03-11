@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import org.hibernate.annotations.Filter;
+
 import com.example.demo.entities.enums.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -27,6 +29,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Filter(name = "softDeleteFilter", condition = "deleted = :isDeleted")
 public class Produto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -39,6 +42,7 @@ public class Produto implements Serializable {
 	private LocalDate data;
 	private Status status;
 	private String finalidade;
+	private Boolean deleted = false;
 	@ManyToOne
 	@JoinColumn(name = "fornecedor_id")
 	@JsonIgnore
@@ -85,5 +89,10 @@ public class Produto implements Serializable {
 			this.fornecedor = null;
 			fornecedorAnterior.removerProdutos(this);
 		}
+	}
+	
+	public void setDeleted(boolean deleted) {
+		
+		this.deleted = deleted;
 	}
 }
