@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import java.net.ConnectException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.entities.Fornecedor;
 import com.example.demo.entities.Produto;
+import com.example.demo.entities.dtos.EstoqueRequest;
+import com.example.demo.entities.dtos.MovimentacaoRequest;
 import com.example.demo.entities.dtos.ProdutoRequest;
 import com.example.demo.entities.dtos.ProdutoResponse;
+import com.example.demo.repositories.EstoqueRepository;
 import com.example.demo.repositories.FornecedorRepository;
 import com.example.demo.repositories.ProdutosRepository;
 import com.example.demo.services.exceptions.DataBaseException;
@@ -25,8 +29,10 @@ public class ProdutosService {
 	private ProdutosRepository ProdutosRepository;
 	@Autowired
 	private FornecedorRepository fornecedorRepository;
+	@Autowired
+	private EstoqueRepository estoqueRepository;
 
-	public Produto salvar(ProdutoRequest produto) {
+	public Produto salvar(ProdutoRequest produto) throws ConnectException {
 		try {
 		Fornecedor fornecedor = fornecedorRepository.getReferenceById(produto.getFornecedorId());
 		Produto novoProduto = new Produto(
@@ -34,12 +40,27 @@ public class ProdutosService {
 				produto.getStatus(),
 				produto.getFinalidade(),
 				fornecedor);
-			
-		return ProdutosRepository.save(novoProduto);
+		
+		var produtoSalvo = ProdutosRepository.save(novoProduto);
+		
+		var estoque = EstoqueRequest
+				.builder()
+				.idProduto(produtoSalvo.getId())
+				.idFornecedor(produtoSalvo.getFornecedor().getId())
+				.build();
+		
+		estoqueRepository.salvarEstoque(estoque);
+		
+		return produtoSalvo;
 		}
 		catch(EntityNotFoundException e) {
 			throw new DataBaseException(e.getMessage());
 		}
+	}
+	
+	public void registrarMovimentacao(MovimentacaoRequest movimentacaoRequest) {
+		
+		estoqueRepository.salvarMovimentacao(movimentacaoRequest);
 	}
 	
 	public ProdutoResponse produtoPorId(Long id) {
@@ -77,6 +98,7 @@ public class ProdutosService {
 			if(!ProdutosRepository.existsById(id)) {
 				throw new ResourceNotFoundException(id);
 			}
+			estoqueRepository.deletarEstoquePorIdProduto(id);
 			ProdutosRepository.deleteById(id);
 		}
 		catch(EmptyResultDataAccessException e) {

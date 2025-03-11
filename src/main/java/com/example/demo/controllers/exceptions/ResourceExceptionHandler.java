@@ -1,5 +1,6 @@
 package com.example.demo.controllers.exceptions;
 
+import java.net.ConnectException;
 import java.time.Instant;
 
 import org.springframework.http.HttpStatus;
@@ -40,4 +41,12 @@ public class ResourceExceptionHandler {
 			StandardError err = new StandardError(Instant.now(),status.value(),error,e.getMessage(),request.getRequestURI());
 			return ResponseEntity.status(status).body(err);
 	 	}
+	 
+	 @ExceptionHandler(ConnectException.class)
+	 public ResponseEntity<StandardError> handleConnectionException(ConnectException e, HttpServletRequest request){
+		 String error = "Falha na conexão com o serviço";
+		 HttpStatus status = HttpStatus.BAD_GATEWAY;
+		 StandardError err = new StandardError(Instant.now(),status.value(),error,e.getMessage(),request.getRequestURI());
+		 return ResponseEntity.status(status).body(err);
+	 }
 }

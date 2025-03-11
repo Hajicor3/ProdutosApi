@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import java.net.ConnectException;
 import java.net.URI;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.demo.entities.Produto;
+import com.example.demo.entities.dtos.MovimentacaoRequest;
 import com.example.demo.entities.dtos.ProdutoRequest;
 import com.example.demo.entities.dtos.ProdutoResponse;
 import com.example.demo.services.ProdutosService;
@@ -29,7 +31,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 public class ProdutosController {
 	
 	@Autowired
-	private ProdutosService ProdutosService;
+	private ProdutosService produtosService;
 	
 	@Operation(description = "Salva um produto no banco de dados.")
 	@ApiResponses(value = {
@@ -37,14 +39,21 @@ public class ProdutosController {
 			@ApiResponse(responseCode = "400", description = "Parametros inválidos.")
 	})
 	@PostMapping
-	public ResponseEntity<Produto> salvarProduto(@RequestBody ProdutoRequest produto) {
+	public ResponseEntity<Produto> salvarProduto(@RequestBody ProdutoRequest produto) throws ConnectException{
 		
-		Produto prod = ProdutosService.salvar(produto);
+		Produto prod = produtosService.salvar(produto);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(prod.getId()).toUri();
 		return ResponseEntity.created(uri).body(prod);
 	}
 	
+	@PostMapping(value = "/movimentacao")
+	public ResponseEntity<Void> registrarMovimentacaoDeProduto(@RequestBody MovimentacaoRequest movimentacaoRequest){
+		produtosService.registrarMovimentacao(movimentacaoRequest);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
+		return ResponseEntity.created(uri).build();
+	}
+
 	@Operation(description = "Resgata um produto do banco de dados pelo id.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Retorna um produto."),
@@ -53,7 +62,7 @@ public class ProdutosController {
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<ProdutoResponse> pegarProduto(@PathVariable Long id){
 		
-		ProdutoResponse produto = ProdutosService.produtoPorId(id);
+		ProdutoResponse produto = produtosService.produtoPorId(id);
 		return ResponseEntity.ok().body(produto);
 	}
 	
@@ -61,7 +70,7 @@ public class ProdutosController {
 	@ApiResponses(value = @ApiResponse(responseCode = "200",description = "Retorna uma lista de fornecedoresDto."))
 	@GetMapping
 	public ResponseEntity<List<ProdutoResponse>> listaDeProdutos(){
-		List<ProdutoResponse> produtos = ProdutosService.resgatarListaDeProdutos();
+		List<ProdutoResponse> produtos = produtosService.resgatarListaDeProdutos();
 		return ResponseEntity.ok().body(produtos);
 	}
 	
@@ -74,7 +83,7 @@ public class ProdutosController {
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id, @RequestBody ProdutoResponse produto){
 		
-		ProdutosService.updateProduto(id, produto);
+		produtosService.updateProduto(id, produto);
 		return ResponseEntity.noContent().build();
 	}
 	
@@ -86,7 +95,7 @@ public class ProdutosController {
 	})
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deleteProdutoPorId(@PathVariable Long id){
-		ProdutosService.excluirProduto(id);
+		produtosService.excluirProduto(id);
 		return ResponseEntity.noContent().build();
 	}
 }
