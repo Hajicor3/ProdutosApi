@@ -22,6 +22,7 @@ import com.example.demo.services.exceptions.DataBaseException;
 import com.example.demo.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProdutosService {
@@ -33,6 +34,7 @@ public class ProdutosService {
 	@Autowired
 	private EstoqueRepository estoqueRepository;
 
+	@Transactional
 	public Produto salvar(ProdutoRequest produto) throws ConnectException {
 		try {
 		Fornecedor fornecedor = fornecedorRepository.getReferenceById(produto.getFornecedorId());
@@ -59,15 +61,18 @@ public class ProdutosService {
 		}
 	}
 	
+	@Transactional
 	public Movimentacao registrarMovimentacao(MovimentacaoRequest movimentacaoRequest) {
 		
 		var mov = estoqueRepository.salvarMovimentacao(movimentacaoRequest).getBody();
 		return mov;
 	}
 	
+	@Transactional
 	public ProdutoResponse produtoPorId(Long id) {
 		try {
 		Produto produto = ProdutosRepository.getReferenceById(id);
+		Long qntd = estoqueRepository.quantidadeEmEstoquePorIdProduto(id).getBody();
 		return ProdutoResponse
 				.builder()
 				.data(produto.getData())
@@ -75,6 +80,7 @@ public class ProdutosService {
 				.nomeProduto(produto.getNomeProduto())
 				.status(produto.getStatus())
 				.id(produto.getId())
+				.quantidade(qntd)
 				.build();
 		}
 		catch(EntityNotFoundException e) {
@@ -85,7 +91,11 @@ public class ProdutosService {
 		}
 	}
 	
+	@Transactional
 	public List<ProdutoResponse> resgatarListaDeProdutos(){
+		
+		var listaDeQuantidadePorProduto = estoqueRepository.produtoQuantidadeLista().getBody();
+		
 		List<ProdutoResponse> produtos = ProdutosRepository.findAll().stream().map(x -> ProdutoResponse
 				.builder()
 				.data(x.getData())
@@ -93,10 +103,13 @@ public class ProdutosService {
 				.id(x.getId())
 				.nomeProduto(x.getNomeProduto())
 				.status(x.getStatus())
-				.build()).toList();
+				.quantidade(listaDeQuantidadePorProduto.getOrDefault(x.getId(), 0L))
+				.build())
+			.toList();
 		return produtos;
 	}
 	
+	@Transactional
 	public void excluirProduto(Long id) {
 		try {
 			
@@ -112,6 +125,7 @@ public class ProdutosService {
 		}
 	}
 	
+	@Transactional
 	public void updateProduto(Long id,ProdutoResponse novo) {
 		try {
 		Produto old = ProdutosRepository.getReferenceById(id);
@@ -123,6 +137,7 @@ public class ProdutosService {
 		}
 	}
 	
+	@Transactional
 	private void update(Produto old, ProdutoResponse novo) {
 		old.setFinalidade(novo.getFinalidade());
 		old.setNomeProduto(novo.getNomeProduto());

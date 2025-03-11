@@ -12,6 +12,6 @@ public interface FornecedorRepository extends JpaRepository<Fornecedor, Long> {
 	@Query("SELECT f FROM Fornecedor f WHERE f.deleted = false")
 	List<Fornecedor> findAll();
 	
-	@Query("SELECT f FROM Fornecedor f WHERE f.deleted = false")
+	@Query("SELECT f FROM Fornecedor f WHERE f.id = :id AND f.deleted = false")
 	Fornecedor getReferenceById(Long id);
 }

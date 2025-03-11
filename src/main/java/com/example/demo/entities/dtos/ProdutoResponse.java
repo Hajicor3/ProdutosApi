@@ -21,4 +21,5 @@ public class ProdutoResponse {
 	private LocalDate data;
 	private Status status;
 	private String finalidade;
+	private Long quantidade;
 }

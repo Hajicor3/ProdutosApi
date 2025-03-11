@@ -12,6 +12,6 @@ public interface ProdutosRepository extends JpaRepository<Produto, Long> {
 	@Query("SELECT f FROM Produto f WHERE f.deleted = false")
 	List<Produto> findAll();
 	
-	@Query("SELECT f FROM Produto f WHERE f.deleted = false")
+	@Query("SELECT f FROM Produto f WHERE f.id = :id AND f.deleted = false")
 	Produto getReferenceById(Long id);
 }
