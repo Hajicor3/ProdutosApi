@@ -19,8 +19,11 @@ import com.example.demo.repositories.EstoqueRepository;
 import com.example.demo.repositories.FornecedorRepository;
 import com.example.demo.repositories.ProdutosRepository;
 import com.example.demo.services.exceptions.DataBaseException;
+import com.example.demo.services.exceptions.FeignExceptionHandler;
 import com.example.demo.services.exceptions.ResourceNotFoundException;
 
+import feign.FeignException;
+import feign.FeignException.FeignClientException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
@@ -59,13 +62,20 @@ public class ProdutosService {
 		catch(EntityNotFoundException e) {
 			throw new DataBaseException(e.getMessage());
 		}
+		catch(NullPointerException e) {
+			throw new IllegalArgumentException(e.getMessage());
+		}
 	}
 	
 	@Transactional
 	public Movimentacao registrarMovimentacao(MovimentacaoRequest movimentacaoRequest) {
-		
+		try {
 		var mov = estoqueRepository.salvarMovimentacao(movimentacaoRequest).getBody();
 		return mov;
+		}
+		catch(FeignException e) {
+			throw new FeignExceptionHandler("O estoque do produto não foi encontrado!",e.getMessage());
+		}
 	}
 	
 	@Transactional
@@ -88,6 +98,9 @@ public class ProdutosService {
 		}
 		catch(NullPointerException e) {
 			throw new ResourceNotFoundException(id);
+		}
+		catch(FeignClientException e) {
+			throw new ResourceNotFoundException(e.getMessage());
 		}
 	}
 	
@@ -122,6 +135,9 @@ public class ProdutosService {
 		}
 		catch(DataIntegrityViolationException e) {
 			throw new DataBaseException(e.getMessage());
+		}
+		catch(FeignClientException e) {
+			throw new ResourceNotFoundException(e.getMessage());
 		}
 	}
 	

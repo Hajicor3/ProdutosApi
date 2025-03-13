@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.example.demo.services.exceptions.DataBaseException;
+import com.example.demo.services.exceptions.FeignExceptionHandler;
 import com.example.demo.services.exceptions.ResourceNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,4 +50,11 @@ public class ResourceExceptionHandler {
 		 StandardError err = new StandardError(Instant.now(),status.value(),error,e.getMessage(),request.getRequestURI());
 		 return ResponseEntity.status(status).body(err);
 	 }
+	 
+	 @ExceptionHandler(FeignExceptionHandler.class)
+		public ResponseEntity<StandardError> feignExceptionHandler(FeignExceptionHandler e, HttpServletRequest request){
+			HttpStatus status = HttpStatus.BAD_REQUEST;
+			StandardError err = new StandardError(Instant.now(),status.value(),e.getError(),e.getMessage(),request.getRequestURI());
+			return ResponseEntity.status(status).body(err);
+		}
 }

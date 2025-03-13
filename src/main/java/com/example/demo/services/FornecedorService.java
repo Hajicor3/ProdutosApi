@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entities.Fornecedor;
 import com.example.demo.entities.dtos.FornecedorRequest;
 import com.example.demo.entities.dtos.FornecedorResponse;
+import com.example.demo.repositories.EstoqueRepository;
 import com.example.demo.repositories.FornecedorRepository;
 import com.example.demo.services.exceptions.DataBaseException;
 import com.example.demo.services.exceptions.ResourceNotFoundException;
@@ -22,6 +23,8 @@ public class FornecedorService {
 	
 	@Autowired
 	private FornecedorRepository fornecedorRepository;
+	@Autowired
+	private EstoqueRepository estoqueRepository;
 	
 	public Fornecedor salvarFornecedor(FornecedorRequest fornecedorDto) {
 		Fornecedor fornecedor = new Fornecedor(fornecedorDto.getNome());
@@ -77,6 +80,7 @@ public class FornecedorService {
 			
 			var fornecedor = fornecedorRepository.getReferenceById(id);
 			fornecedor.softDeleted();
+			estoqueRepository.deletarEstoquesDeFornecedor(id);
 			fornecedorRepository.save(fornecedor);
 		}
 		catch(EmptyResultDataAccessException e) {

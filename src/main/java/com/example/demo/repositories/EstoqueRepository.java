@@ -31,4 +31,7 @@ public interface EstoqueRepository {
 	
 	@GetMapping(value = "estoques/qntd/produto/list")
 	public ResponseEntity<Map<Long,Long>> produtoQuantidadeLista();
+	
+	@DeleteMapping(value = "estoques/fornecedor/{id}")
+	public ResponseEntity<Void> deletarEstoquesDeFornecedor(@PathVariable Long id);
 }
