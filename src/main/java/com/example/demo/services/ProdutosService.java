@@ -77,6 +77,7 @@ public class ProdutosService {
 		}
 	}
 	
+	@Transactional
 	public void cancelarMovimentacao(Long id) {
 		try {
 		estoqueRepository.cancelarMovimentacaoPorid(id);
@@ -84,6 +85,11 @@ public class ProdutosService {
 		catch(FeignClientException e) {
 			throw new FeignExceptionHandler(e.status(),e.getMessage());
 		}
+	}
+	
+	@Transactional
+	public List<Movimentacao> resgatarTodasMovimentacoes() {
+		return estoqueRepository.resgatarMovimentacoes().getBody();
 	}
 	
 	@Transactional

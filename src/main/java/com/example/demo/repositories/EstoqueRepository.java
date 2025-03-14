@@ -1,5 +1,6 @@
 package com.example.demo.repositories;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.cloud.openfeign.FeignClient;
@@ -38,4 +39,7 @@ public interface EstoqueRepository {
 	
 	@PutMapping(value = "movimentacoes/{id}")
 	public ResponseEntity<Void> cancelarMovimentacaoPorid(@PathVariable Long id);
+	
+	@GetMapping(value = "/movimentacoes")
+	public ResponseEntity<List<Movimentacao>> resgatarMovimentacoes();
 }

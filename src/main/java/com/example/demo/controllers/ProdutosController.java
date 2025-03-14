@@ -70,6 +70,14 @@ public class ProdutosController {
 		produtosService.cancelarMovimentacao(id);
 		return ResponseEntity.noContent().build();
 	}
+	
+	@Operation(description = "Retorna uma lista de Dto´s de todas as movimentações do banco.")
+	@ApiResponses(value = @ApiResponse(responseCode = "200",description = "Retorna uma lista de todas as movimentações."))
+	@GetMapping(value = "/movimentacao")
+	public ResponseEntity<List<Movimentacao>> resgatarTodasMovimentacoes(){
+		var movimentacoes = produtosService.resgatarTodasMovimentacoes();
+		return ResponseEntity.ok().body(movimentacoes);
+	}
 
 	@Operation(description = "Resgata um produto do banco de dados pelo id.")
 	@ApiResponses(value = {
