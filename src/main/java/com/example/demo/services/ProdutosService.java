@@ -73,7 +73,7 @@ public class ProdutosService {
 		return mov;
 		}
 		catch(FeignClientException e) {
-			throw new FeignExceptionHandler(e.getMessage());
+			throw new FeignExceptionHandler(e.status(),e.getMessage());
 		}
 	}
 	
@@ -82,7 +82,7 @@ public class ProdutosService {
 		estoqueRepository.cancelarMovimentacaoPorid(id);
 		}
 		catch(FeignClientException e) {
-			throw new FeignExceptionHandler(e.getMessage());
+			throw new FeignExceptionHandler(e.status(),e.getMessage());
 		}
 	}
 	
@@ -108,7 +108,7 @@ public class ProdutosService {
 			throw new ResourceNotFoundException(id);
 		}
 		catch(FeignClientException e) {
-			throw new FeignExceptionHandler(e.getMessage());
+			throw new FeignExceptionHandler(e.status(),e.getMessage());
 		}
 	}
 	
