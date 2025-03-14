@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.demo.entities.Movimentacao;
@@ -34,4 +35,7 @@ public interface EstoqueRepository {
 	
 	@DeleteMapping(value = "estoques/fornecedor/{id}")
 	public ResponseEntity<Void> deletarEstoquesDeFornecedor(@PathVariable Long id);
+	
+	@PutMapping(value = "movimentacoes/{id}")
+	public ResponseEntity<Void> cancelarMovimentacaoPorid(@PathVariable Long id);
 }

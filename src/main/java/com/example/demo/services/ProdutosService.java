@@ -19,6 +19,7 @@ import com.example.demo.repositories.EstoqueRepository;
 import com.example.demo.repositories.FornecedorRepository;
 import com.example.demo.repositories.ProdutosRepository;
 import com.example.demo.services.exceptions.DataBaseException;
+import com.example.demo.services.exceptions.FeignExceptionHandler;
 import com.example.demo.services.exceptions.ResourceNotFoundException;
 
 import feign.FeignException.FeignClientException;
@@ -72,7 +73,16 @@ public class ProdutosService {
 		return mov;
 		}
 		catch(FeignClientException e) {
-			throw new ResourceNotFoundException("Não existe estoque no id do produto informado!");
+			throw new FeignExceptionHandler(e.getMessage());
+		}
+	}
+	
+	public void cancelarMovimentacao(Long id) {
+		try {
+		estoqueRepository.cancelarMovimentacaoPorid(id);
+		}
+		catch(FeignClientException e) {
+			throw new FeignExceptionHandler(e.getMessage());
 		}
 	}
 	
@@ -98,7 +108,7 @@ public class ProdutosService {
 			throw new ResourceNotFoundException(id);
 		}
 		catch(FeignClientException e) {
-			throw new ResourceNotFoundException(e.getMessage());
+			throw new FeignExceptionHandler(e.getMessage());
 		}
 	}
 	

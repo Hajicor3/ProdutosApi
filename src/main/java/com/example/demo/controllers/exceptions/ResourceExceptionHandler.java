@@ -54,7 +54,8 @@ public class ResourceExceptionHandler {
 	 @ExceptionHandler(FeignExceptionHandler.class)
 		public ResponseEntity<StandardError> handleFeignException(FeignExceptionHandler e, HttpServletRequest request){
 			HttpStatus status = HttpStatus.BAD_REQUEST;
-			StandardError err = new StandardError(Instant.now(),status.value(),e.getError(),e.getMessage(),request.getRequestURI());
+			String error = "Erro na comunicação com o microserviço";
+			StandardError err = new StandardError(Instant.now(),status.value(),error,e.getMessage(),request.getRequestURI());
 			return ResponseEntity.status(status).body(err);
 		}
 }

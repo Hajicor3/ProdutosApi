@@ -59,6 +59,17 @@ public class ProdutosController {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
 		return ResponseEntity.created(uri).body(mov);
 	}
+	
+	@Operation(description = "Cancela uma movimentacao já feita, pelo id.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "cancela uma movimentacao."),
+			@ApiResponse(responseCode = "404", description = "Não existe movimentacao no id informado.")
+	})
+	@PutMapping(value = "/movimentacao/{id}")
+	public ResponseEntity<Void> cancelarMovimentacaoPorId(@PathVariable Long id){
+		produtosService.cancelarMovimentacao(id);
+		return ResponseEntity.noContent().build();
+	}
 
 	@Operation(description = "Resgata um produto do banco de dados pelo id.")
 	@ApiResponses(value = {
