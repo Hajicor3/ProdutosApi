@@ -13,4 +13,4 @@ spring:
 
 api:
   estoque:
-    url: ${FEIGNCLIENT_URL}
+    url: ${FEIGNCLIENT_URL:https://estoqueapi-kdaq.onrender.com}
