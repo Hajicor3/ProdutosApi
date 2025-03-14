@@ -48,8 +48,13 @@ public class ProdutosController {
 		return ResponseEntity.created(uri).body(prod);
 	}
 	
+	@Operation(description = "Solicita o salvamento de uma movimentação na api de estoque.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Salva uma movimentação na api de estoque."),
+			@ApiResponse(responseCode = "400", description = "Parametros inválidos.")
+	})
 	@PostMapping(value = "/movimentacao")
-	public ResponseEntity<Movimentacao> registrarMovimentacaoDeProduto(@RequestBody MovimentacaoRequest movimentacaoRequest){
+	public ResponseEntity<Movimentacao> registrarMovimentacaoDeProduto(@RequestBody MovimentacaoRequest movimentacaoRequest) {
 		var mov = produtosService.registrarMovimentacao(movimentacaoRequest);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
 		return ResponseEntity.created(uri).body(mov);

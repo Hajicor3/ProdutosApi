@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class ResourceExceptionHandler {
 
 	@ExceptionHandler(ResourceNotFoundException.class)
-	public ResponseEntity<StandardError> ResourceNotFound(ResourceNotFoundException e, HttpServletRequest request){
+	public ResponseEntity<StandardError> resourceNotFound(ResourceNotFoundException e, HttpServletRequest request){
 		
 		String error= "Recurso não encontrado!";
 		HttpStatus status = HttpStatus.NOT_FOUND ;
@@ -27,7 +27,7 @@ public class ResourceExceptionHandler {
 	}
 	
 	@ExceptionHandler(DataBaseException.class)
-	public ResponseEntity<StandardError> database(DataBaseException e, HttpServletRequest request){
+	public ResponseEntity<StandardError> databaseException(DataBaseException e, HttpServletRequest request){
 		
 		String error = "Erro no banco de dados!";
 		HttpStatus status = HttpStatus.BAD_REQUEST ;
@@ -52,7 +52,7 @@ public class ResourceExceptionHandler {
 	 }
 	 
 	 @ExceptionHandler(FeignExceptionHandler.class)
-		public ResponseEntity<StandardError> feignExceptionHandler(FeignExceptionHandler e, HttpServletRequest request){
+		public ResponseEntity<StandardError> handleFeignException(FeignExceptionHandler e, HttpServletRequest request){
 			HttpStatus status = HttpStatus.BAD_REQUEST;
 			StandardError err = new StandardError(Instant.now(),status.value(),e.getError(),e.getMessage(),request.getRequestURI());
 			return ResponseEntity.status(status).body(err);

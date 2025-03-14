@@ -14,7 +14,7 @@ import com.example.demo.entities.Movimentacao;
 import com.example.demo.entities.dtos.EstoqueRequest;
 import com.example.demo.entities.dtos.MovimentacaoRequest;
 
-@FeignClient(name = "apiestoque", url = "http://localhost:8081")
+@FeignClient(name = "apiestoque", url = "${api.estoque.url}")
 public interface EstoqueRepository {
 
 	@PostMapping("/estoques")

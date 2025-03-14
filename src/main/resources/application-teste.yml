@@ -13,5 +13,9 @@ spring:
       hibernate:
         formater-sql: true
 
+api:
+  estoque:
+    url: http://localhost:8081
+
 
 

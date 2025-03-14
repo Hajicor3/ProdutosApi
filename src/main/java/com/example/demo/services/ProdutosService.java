@@ -19,10 +19,8 @@ import com.example.demo.repositories.EstoqueRepository;
 import com.example.demo.repositories.FornecedorRepository;
 import com.example.demo.repositories.ProdutosRepository;
 import com.example.demo.services.exceptions.DataBaseException;
-import com.example.demo.services.exceptions.FeignExceptionHandler;
 import com.example.demo.services.exceptions.ResourceNotFoundException;
 
-import feign.FeignException;
 import feign.FeignException.FeignClientException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -73,8 +71,8 @@ public class ProdutosService {
 		var mov = estoqueRepository.salvarMovimentacao(movimentacaoRequest).getBody();
 		return mov;
 		}
-		catch(FeignException e) {
-			throw new FeignExceptionHandler("O estoque do produto não foi encontrado!",e.getMessage());
+		catch(FeignClientException e) {
+			throw new ResourceNotFoundException("Não existe estoque no id do produto informado!");
 		}
 	}
 	
