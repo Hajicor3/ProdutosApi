@@ -22,6 +22,7 @@ import com.example.demo.entities.dtos.MovimentacaoRequest;
 import com.example.demo.entities.dtos.ProdutoRequest;
 import com.example.demo.entities.dtos.ProdutoResponse;
 import com.example.demo.services.ProdutosService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -66,7 +67,7 @@ public class ProdutosController {
 			@ApiResponse(responseCode = "404", description = "Não existe movimentacao no id informado.")
 	})
 	@PutMapping(value = "/movimentacao/{id}")
-	public ResponseEntity<Void> cancelarMovimentacaoPorId(@PathVariable Long id){
+	public ResponseEntity<Void> cancelarMovimentacaoPorId(@PathVariable Long id) throws JsonProcessingException{
 		produtosService.cancelarMovimentacao(id);
 		return ResponseEntity.noContent().build();
 	}

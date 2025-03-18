@@ -18,9 +18,11 @@ import com.example.demo.entities.dtos.ProdutoResponse;
 import com.example.demo.repositories.EstoqueRepository;
 import com.example.demo.repositories.FornecedorRepository;
 import com.example.demo.repositories.ProdutosRepository;
+import com.example.demo.repositories.mqueues.ProdutoEstoqueQueuePublisher;
 import com.example.demo.services.exceptions.DataBaseException;
 import com.example.demo.services.exceptions.FeignExceptionHandler;
 import com.example.demo.services.exceptions.ResourceNotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import feign.FeignException.FeignClientException;
 import jakarta.persistence.EntityNotFoundException;
@@ -35,28 +37,30 @@ public class ProdutosService {
 	private FornecedorRepository fornecedorRepository;
 	@Autowired
 	private EstoqueRepository estoqueRepository;
+	@Autowired
+	private ProdutoEstoqueQueuePublisher estoqueQueuePublisher;
 
 	@Transactional
 	public Produto salvar(ProdutoRequest produto) throws ConnectException {
 		try {
-		Fornecedor fornecedor = fornecedorRepository.getReferenceById(produto.getFornecedorId());
-		Produto novoProduto = new Produto(
-				produto.getNomeProduto(),
-				produto.getStatus(),
-				produto.getFinalidade(),
-				fornecedor);
-		
-		var produtoSalvo = ProdutosRepository.save(novoProduto);
-		
-		var estoque = EstoqueRequest
-				.builder()
-				.idProduto(produtoSalvo.getId())
-				.idFornecedor(produtoSalvo.getFornecedor().getId())
-				.build();
-		
-		estoqueRepository.salvarEstoque(estoque);
-		
-		return produtoSalvo;
+			Fornecedor fornecedor = fornecedorRepository.getReferenceById(produto.getFornecedorId());
+			Produto novoProduto = new Produto(
+					produto.getNomeProduto(),
+					produto.getStatus(),
+					produto.getFinalidade(),
+					fornecedor);
+			
+			var produtoSalvo = ProdutosRepository.save(novoProduto);
+			
+			var estoque = EstoqueRequest
+					.builder()
+					.idProduto(produtoSalvo.getId())
+					.idFornecedor(produtoSalvo.getFornecedor().getId())
+					.build();
+			
+			estoqueRepository.salvarEstoque(estoque);
+			
+			return produtoSalvo;
 		}
 		catch(EntityNotFoundException e) {
 			throw new DataBaseException(e.getMessage());
@@ -69,8 +73,8 @@ public class ProdutosService {
 	@Transactional
 	public Movimentacao registrarMovimentacao(MovimentacaoRequest movimentacaoRequest) {
 		try {
-		var mov = estoqueRepository.salvarMovimentacao(movimentacaoRequest).getBody();
-		return mov;
+			var mov = estoqueRepository.salvarMovimentacao(movimentacaoRequest).getBody();
+			return mov;
 		}
 		catch(FeignClientException e) {
 			throw new FeignExceptionHandler(e.status(),e.getMessage());
@@ -78,9 +82,9 @@ public class ProdutosService {
 	}
 	
 	@Transactional
-	public void cancelarMovimentacao(Long id) {
+	public void cancelarMovimentacao(Long id) throws JsonProcessingException {
 		try {
-		estoqueRepository.cancelarMovimentacaoPorid(id);
+			estoqueQueuePublisher.SolicitarcancelamentoMovimentacao(id);
 		}
 		catch(FeignClientException e) {
 			throw new FeignExceptionHandler(e.status(),e.getMessage());
@@ -95,17 +99,17 @@ public class ProdutosService {
 	@Transactional
 	public ProdutoResponse produtoPorId(Long id) {
 		try {
-		Produto produto = ProdutosRepository.getReferenceById(id);
-		Long qntd = estoqueRepository.quantidadeEmEstoquePorIdProduto(id).getBody();
-		return ProdutoResponse
-				.builder()
-				.data(produto.getData())
-				.finalidade(produto.getFinalidade())
-				.nomeProduto(produto.getNomeProduto())
-				.status(produto.getStatus())
-				.id(produto.getId())
-				.quantidade(qntd)
-				.build();
+			Produto produto = ProdutosRepository.getReferenceById(id);
+			Long qntd = estoqueRepository.quantidadeEmEstoquePorIdProduto(id).getBody();
+			return ProdutoResponse
+					.builder()
+					.data(produto.getData())
+					.finalidade(produto.getFinalidade())
+					.nomeProduto(produto.getNomeProduto())
+					.status(produto.getStatus())
+					.id(produto.getId())
+					.quantidade(qntd)
+					.build();
 		}
 		catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
@@ -158,9 +162,9 @@ public class ProdutosService {
 	@Transactional
 	public void updateProduto(Long id,ProdutoResponse novo) {
 		try {
-		Produto old = ProdutosRepository.getReferenceById(id);
-		update(old, novo);
-		ProdutosRepository.save(old);
+			Produto old = ProdutosRepository.getReferenceById(id);
+			update(old, novo);
+			ProdutosRepository.save(old);
 		}
 		catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);

@@ -13,6 +13,18 @@ spring:
       hibernate:
         formater-sql: true
 
+  rabbitmq:
+    host: jackal.rmq.cloudamqp.com
+    port: 5672
+    username: bpigzlwr
+    password: yj-TmmnOoQJKidOOOmixkxIjYw6P61Yj
+    virtual-host: bpigzlwr
+
+
+mq:
+  queue:
+    produto-estoque-queue: produto-estoque-queue
+
 api:
   estoque:
     url: http://localhost:8081
