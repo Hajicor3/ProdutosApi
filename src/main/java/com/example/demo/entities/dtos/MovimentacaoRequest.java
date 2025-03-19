@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class MovimentacaoRequest {
 
 	private Long idProduto;
+	private Long quantidade;
 	private TipoDeMovimentacao tipoDeMovimentacao;
 }
