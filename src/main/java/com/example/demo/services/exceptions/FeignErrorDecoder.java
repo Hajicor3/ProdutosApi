@@ -27,7 +27,7 @@ public class FeignErrorDecoder implements ErrorDecoder {
 				String responseBody = new String(response.body().asInputStream().readAllBytes(), StandardCharsets.UTF_8);
 				JsonNode jsonNode = objectMapper.readTree(responseBody);
 				
-				String erro = jsonNode.has("erro") ? jsonNode.get("message").asText() : "Erro desconhecido"; 
+				String erro = jsonNode.has("erro") ? jsonNode.get("erro").asText() : "Erro desconhecido"; 
 				String mensagem = jsonNode.has("message") ? jsonNode.get("message").asText() : "Sem detalhes";
 				
 				errorMessage = String.format("Erro FeignClient [%d]: %s - %s", response.status(), erro,mensagem);
