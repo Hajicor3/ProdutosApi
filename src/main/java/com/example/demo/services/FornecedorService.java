@@ -34,13 +34,13 @@ public class FornecedorService {
 	public FornecedorResponse buscarFornecedores(Long id){
 		
 		try {
-		Fornecedor fornecedor = fornecedorRepository.getReferenceById(id);
-		return FornecedorResponse
-				.builder()
-				.nome(fornecedor.getNome())
-				.id(fornecedor.getId())
-				.produtos(fornecedor.getProdutos())
-				.build();
+			Fornecedor fornecedor = fornecedorRepository.getReferenceById(id);
+			return FornecedorResponse
+					.builder()
+					.nome(fornecedor.getNome())
+					.id(fornecedor.getId())
+					.produtos(fornecedor.getProdutos())
+					.build();
 		}
 		catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
@@ -62,9 +62,9 @@ public class FornecedorService {
 	
 	public void atualizar(Long id, FornecedorRequest novo) {
 		try {
-		Fornecedor old = fornecedorRepository.getReferenceById(id);
-		update(old, novo);
-		fornecedorRepository.save(old);
+			Fornecedor old = fornecedorRepository.getReferenceById(id);
+			update(old, novo);
+			fornecedorRepository.save(old);
 		}
 		catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
