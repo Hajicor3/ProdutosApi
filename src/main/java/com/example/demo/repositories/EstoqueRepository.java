@@ -42,4 +42,10 @@ public interface EstoqueRepository {
 	
 	@GetMapping(value = "/movimentacoes")
 	public ResponseEntity<List<Movimentacao>> resgatarMovimentacoes();
+	
+	@GetMapping(value = "/movimentacoes/{id}")
+	public ResponseEntity<Movimentacao> buscarMovimentacaoPorId(@PathVariable Long id);
+	
+	@GetMapping(value = "/movimentacoes/produto/list/{id}")
+	public ResponseEntity<List<Movimentacao>> resgatarMovimentacoesPorIdProduto(@PathVariable Long id);
 }
