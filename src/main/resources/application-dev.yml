@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://dpg-cv2bb6dsvqrc738tq7pg-a.oregon-postgres.render.com:5432/deploy_produtos_api
-    username: admin
-    password: DyoI6PWoJ6ck6ewWBO00WgJAdymET972
+    url: ${SPRING_POSTGRES_URL}
+    username: ${SPRING_POSTGRES_USERNAME}
+    password: ${SPRING_POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -12,11 +12,11 @@ spring:
     show-sql: true
 
   rabbitmq:
-    host: jackal.rmq.cloudamqp.com
+    host: ${SPRING_RABBITMQ_HOST}
     port: 5672
-    username: bpigzlwr
-    password: yj-TmmnOoQJKidOOOmixkxIjYw6P61Yj
-    virtual-host: bpigzlwr
+    username: ${SPRING_RABBITMQ_USERNAME}
+    password: ${SPRING_RABBITMQ_PASSWORD}
+    virtual-host: ${SPRING_RABBITMQ_VIRTUAL_HOST}
 
 mq:
   queue:
@@ -24,4 +24,4 @@ mq:
 
 api:
   estoque:
-    url: ${FEIGNCLIENT_URL:https://estoqueapi-kdaq.onrender.com}
+    url: ${SPRING_FEIGNCLIENT_URL}

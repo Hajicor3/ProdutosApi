@@ -3,7 +3,7 @@ spring:
     name: apiprodutos
   profiles:
     active:
-      - "teste"
+      - ${SPRING_APPLICATION_PROFILE:teste}
 server:
   port: 8080
 
