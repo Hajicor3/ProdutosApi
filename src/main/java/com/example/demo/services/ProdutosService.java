@@ -92,8 +92,29 @@ public class ProdutosService {
 	}
 	
 	@Transactional
+	public Movimentacao resgatarMovimentacaoPorId(Long id) {
+		try {
+			return estoqueRepository.buscarMovimentacaoPorId(id).getBody();
+		}
+		catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
+		catch(NullPointerException e) {
+			throw new ResourceNotFoundException(id);
+		}
+		catch(FeignClientException e) {
+			throw new FeignExceptionHandler(e.status(),e.getMessage());
+		}
+	}
+	
+	@Transactional
 	public List<Movimentacao> resgatarTodasMovimentacoes() {
 		return estoqueRepository.resgatarMovimentacoes().getBody();
+	}
+	
+	@Transactional
+	public List<Movimentacao> resgatarTodasMovimentacoesPorId(Long id) {
+		return estoqueRepository.resgatarMovimentacoesPorIdProduto(id).getBody();
 	}
 	
 	@Transactional

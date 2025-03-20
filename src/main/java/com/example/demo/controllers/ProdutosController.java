@@ -79,6 +79,25 @@ public class ProdutosController {
 		var movimentacoes = produtosService.resgatarTodasMovimentacoes();
 		return ResponseEntity.ok().body(movimentacoes);
 	}
+	
+	@Operation(description = "Resgata uma movimentação do banco de dados pelo id.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Retorna uma movimentação."),
+			@ApiResponse(responseCode = "404", description = "Não existe movimentação no id informado.")
+	})
+	@GetMapping(value = "movimentacao/{id}")
+	public ResponseEntity<Movimentacao> buscarMovimentacaoPorId(@PathVariable Long id){
+		var mov = produtosService.resgatarMovimentacaoPorId(id);
+		return ResponseEntity.ok().body(mov);
+	}
+	
+	@Operation(description = "Retorna uma lista de Dto´s de todas as movimentações de um produto.")
+	@ApiResponses(value = @ApiResponse(responseCode = "200",description = "Retorna uma lista de todas as movimentações."))
+	@GetMapping(value = "movimentacao/list/produto/{id}")
+	public ResponseEntity<List<Movimentacao>> resgatarMovimentacoesPorIdProduto(@PathVariable Long id){
+		var movimentacoes = produtosService.resgatarTodasMovimentacoesPorId(id);
+		return ResponseEntity.ok().body(movimentacoes);
+	}
 
 	@Operation(description = "Resgata um produto do banco de dados pelo id.")
 	@ApiResponses(value = {
