@@ -2,7 +2,6 @@ package com.example.demo.controllers;
 
 import java.net.URI;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,13 +20,14 @@ import com.example.demo.services.AgregadoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(value = "/agregadores")
+@RequiredArgsConstructor
 public class AgregadoController {
 	
-	@Autowired
-	private AgregadoService agregadoService;
+	private final AgregadoService agregadoService;
 	
 	@Operation(description = "Salva um agregado no banco de dados")
 	@ApiResponses(value = {

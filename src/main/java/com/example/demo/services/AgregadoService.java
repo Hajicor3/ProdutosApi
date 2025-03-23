@@ -2,7 +2,6 @@ package com.example.demo.services;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -14,12 +13,13 @@ import com.example.demo.services.exceptions.DataBaseException;
 import com.example.demo.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AgregadoService {
 	
-	@Autowired
-	private AgregadorRepository agregadoRepository;
+	private final AgregadorRepository agregadoRepository;
 	
 	public Agregado salvar(Agregado agregador) {
 		try {

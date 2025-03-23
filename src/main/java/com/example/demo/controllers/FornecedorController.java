@@ -3,7 +3,6 @@ package com.example.demo.controllers;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,13 +22,14 @@ import com.example.demo.services.FornecedorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(value = "/fornecedores")
+@RequiredArgsConstructor
 public class FornecedorController {
 	
-	@Autowired
-	private FornecedorService fornecedorService;
+	private final FornecedorService fornecedorService;
 	
 	@Operation(description = "Salva um fornecedor no banco de dados")
 	@ApiResponses(value = {

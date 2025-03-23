@@ -4,7 +4,6 @@ import java.net.ConnectException;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,13 +26,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(value = "/produtos")
+@RequiredArgsConstructor
 public class ProdutosController {
 	
-	@Autowired
-	private ProdutosService produtosService;
+	private final ProdutosService produtosService;
 	
 	@Operation(description = "Salva um produto no banco de dados.")
 	@ApiResponses(value = {

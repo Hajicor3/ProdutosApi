@@ -3,7 +3,6 @@ package com.example.demo.services;
 import java.net.ConnectException;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -27,18 +26,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import feign.FeignException.FeignClientException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ProdutosService {
 	
-	@Autowired
-	private ProdutosRepository ProdutosRepository;
-	@Autowired
-	private FornecedorRepository fornecedorRepository;
-	@Autowired
-	private EstoqueRepository estoqueRepository;
-	@Autowired
-	private ProdutoEstoqueQueuePublisher estoqueQueuePublisher;
+	private final ProdutosRepository ProdutosRepository;
+	private final FornecedorRepository fornecedorRepository;
+	private final EstoqueRepository estoqueRepository;
+	private final ProdutoEstoqueQueuePublisher estoqueQueuePublisher;
 
 	@Transactional
 	public Produto salvar(ProdutoRequest produto) throws ConnectException {
