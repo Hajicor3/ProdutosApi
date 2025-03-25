@@ -9,5 +9,11 @@ RUN mvn clean install
 
 FROM openjdk:21-jdk-slim
 EXPOSE 8080
+
+RUN mkdir /newrelic
+
+COPY --from=build ./src/main/resources/newrelic/newrelic.jar /newrelic/newrelic.jar
+COPY --from=build ./src/main/resources/newrelic/newrelic.yml /newrelic/newrelic.yml
+
 COPY --from=build ./target/produtosApi-0.0.1-SNAPSHOT.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-javaagent:/newrelic/newrelic.jar","-jar", "app.jar"]
