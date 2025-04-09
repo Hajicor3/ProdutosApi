@@ -37,6 +37,7 @@ public class Produto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nomeProduto;
+	private Double preco;
 	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
 	@Schema(hidden = true)
 	private LocalDate data;
@@ -48,8 +49,9 @@ public class Produto implements Serializable {
 	@JsonIgnore
 	private Fornecedor fornecedor;
 	
-	public Produto(String nomeProduto, Status status, String finalidade, Fornecedor fornecedor) {
+	public Produto(String nomeProduto,Double preco, Status status, String finalidade, Fornecedor fornecedor) {
 		setNomeProduto(nomeProduto);
+		setPreco(preco);
 		this.data = LocalDate.now();
 		setStatus(status);
 		setFinalidade(finalidade);
@@ -61,6 +63,13 @@ public class Produto implements Serializable {
 			throw new IllegalArgumentException("O nome do produto não pode ser nulo ou vazio !");
 		}
 		this.nomeProduto = nomeProduto;
+	}
+	
+	public void setPreco(Double preco) {
+		if(preco <= 0 || preco == null) {
+			throw new IllegalArgumentException("O nome do produto não pode ter o preço menor ou igual a zero!");
+		}
+		this.preco = preco;
 	}
 	
 	public void setStatus(Status status) {

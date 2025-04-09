@@ -43,6 +43,7 @@ public class ProdutosService {
 			Fornecedor fornecedor = fornecedorRepository.getReferenceById(produto.getFornecedorId());
 			Produto novoProduto = new Produto(
 					produto.getNomeProduto(),
+					produto.getPreco(),
 					produto.getStatus(),
 					produto.getFinalidade(),
 					fornecedor);
@@ -124,6 +125,7 @@ public class ProdutosService {
 					.data(produto.getData())
 					.finalidade(produto.getFinalidade())
 					.nomeProduto(produto.getNomeProduto())
+					.preco(produto.getPreco())
 					.status(produto.getStatus())
 					.id(produto.getId())
 					.quantidade(qntd)
@@ -151,6 +153,7 @@ public class ProdutosService {
 				.finalidade(x.getFinalidade())
 				.id(x.getId())
 				.nomeProduto(x.getNomeProduto())
+				.preco(x.getPreco())
 				.status(x.getStatus())
 				.quantidade(listaDeQuantidadePorProduto.getOrDefault(x.getId(), 0L))
 				.build())
@@ -194,5 +197,6 @@ public class ProdutosService {
 		old.setFinalidade(novo.getFinalidade());
 		old.setNomeProduto(novo.getNomeProduto());
 		old.setStatus(novo.getStatus());
+		old.setPreco(novo.getPreco());
 	}
 }
