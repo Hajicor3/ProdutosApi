@@ -10,6 +10,7 @@ import lombok.Data;
 public class ProdutoRequest {
 	
 	private String nomeProduto;
+	private Double preco;
 	private Status status;
 	private String finalidade;
 	private Long fornecedorId;

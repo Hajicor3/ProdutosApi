@@ -16,6 +16,7 @@ public class ProdutoResponse {
 	
 	private Long id;
 	private String nomeProduto;
+	private Double preco;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
 	private LocalDate data;
