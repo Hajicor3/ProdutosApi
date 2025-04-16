@@ -72,7 +72,7 @@ public class FornecedorController {
 			@ApiResponse(responseCode = "400", description = "Parametros inválidos")
 	})
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Fornecedor> atualizarFornecedor(@PathVariable Long id,@RequestBody FornecedorRequest fornecedor){
+	public ResponseEntity<Void> atualizarFornecedor(@PathVariable Long id,@RequestBody FornecedorRequest fornecedor){
 		fornecedorService.atualizar(id, fornecedor);
 		return ResponseEntity.noContent().build();
 	}
@@ -84,7 +84,7 @@ public class FornecedorController {
 			@ApiResponse(responseCode = "400", description = "Parametros inválidos")
 	})
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Fornecedor> deletarFornecedor(@PathVariable Long id){
+	public ResponseEntity<Void> deletarFornecedor(@PathVariable Long id){
 		fornecedorService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
