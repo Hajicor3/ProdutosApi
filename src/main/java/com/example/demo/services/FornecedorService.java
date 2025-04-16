@@ -25,9 +25,15 @@ public class FornecedorService {
 	private final FornecedorRepository fornecedorRepository;
 	private final EstoqueRepository estoqueRepository;
 	
-	public Fornecedor salvarFornecedor(FornecedorRequest fornecedorDto) {
+	public FornecedorResponse salvarFornecedor(FornecedorRequest fornecedorDto) {
 		Fornecedor fornecedor = new Fornecedor(fornecedorDto.getNome());
-		return fornecedorRepository.save(fornecedor);
+		var salvo = fornecedorRepository.save(fornecedor);
+		return FornecedorResponse
+				.builder()
+				.nome(salvo.getNome())
+				.id(salvo.getId())
+				.produtos(salvo.getProdutos())
+				.build();
 	}
 	
 	public FornecedorResponse buscarFornecedores(Long id){

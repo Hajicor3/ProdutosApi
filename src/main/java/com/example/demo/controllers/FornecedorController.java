@@ -37,9 +37,9 @@ public class FornecedorController {
 			@ApiResponse(responseCode = "400", description = "Parametros inválidos")
 	})
 	@PostMapping
-	public ResponseEntity<Fornecedor> criarFornecedor(@RequestBody FornecedorRequest fornecedor){
+	public ResponseEntity<FornecedorResponse> criarFornecedor(@RequestBody FornecedorRequest fornecedor){
 		
-		Fornecedor novoFornecedor = fornecedorService.salvarFornecedor(fornecedor);
+		FornecedorResponse novoFornecedor = fornecedorService.salvarFornecedor(fornecedor);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(novoFornecedor.getId()).toUri();
 		return ResponseEntity.created(uri).body(novoFornecedor);
