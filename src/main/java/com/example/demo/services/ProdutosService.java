@@ -38,7 +38,7 @@ public class ProdutosService {
 	private final ProdutoEstoqueQueuePublisher estoqueQueuePublisher;
 
 	@Transactional
-	public Produto salvar(ProdutoRequest produto) throws ConnectException {
+	public ProdutoResponse salvar(ProdutoRequest produto) throws ConnectException {
 		try {
 			Fornecedor fornecedor = fornecedorRepository.getReferenceById(produto.getFornecedorId());
 			Produto novoProduto = new Produto(
@@ -58,7 +58,15 @@ public class ProdutosService {
 			
 			estoqueRepository.salvarEstoque(estoque);
 			
-			return produtoSalvo;
+			return ProdutoResponse
+					.builder()
+					.nomeProduto(produtoSalvo.getNomeProduto())
+					.finalidade(produtoSalvo.getFinalidade())
+					.data(produtoSalvo.getData())
+					.id(produtoSalvo.getId())
+					.preco(produtoSalvo.getPreco())
+					.status(produtoSalvo.getStatus())
+					.build();
 		}
 		catch(EntityNotFoundException e) {
 			throw new DataBaseException(e.getMessage());

@@ -41,9 +41,9 @@ public class ProdutosController {
 			@ApiResponse(responseCode = "400", description = "Parametros inválidos.")
 	})
 	@PostMapping
-	public ResponseEntity<Produto> salvarProduto(@RequestBody ProdutoRequest produto) throws ConnectException{
+	public ResponseEntity<ProdutoResponse> salvarProduto(@RequestBody ProdutoRequest produto) throws ConnectException{
 		
-		Produto prod = produtosService.salvar(produto);
+		ProdutoResponse prod = produtosService.salvar(produto);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(prod.getId()).toUri();
 		return ResponseEntity.created(uri).body(prod);
