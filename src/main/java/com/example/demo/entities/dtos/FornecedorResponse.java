@@ -15,5 +15,5 @@ public class FornecedorResponse {
 	
 	private Long id;
 	private String nome;
-	private List<Produto> produtos;
+	private List<ProdutoResponse> produtos;
 }

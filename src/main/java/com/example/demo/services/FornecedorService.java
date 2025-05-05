@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entities.Fornecedor;
 import com.example.demo.entities.dtos.FornecedorRequest;
 import com.example.demo.entities.dtos.FornecedorResponse;
+import com.example.demo.entities.dtos.ProdutoResponse;
 import com.example.demo.repositories.EstoqueRepository;
 import com.example.demo.repositories.FornecedorRepository;
 import com.example.demo.services.exceptions.DataBaseException;
@@ -28,11 +29,23 @@ public class FornecedorService {
 	public FornecedorResponse salvarFornecedor(FornecedorRequest fornecedorDto) {
 		Fornecedor fornecedor = new Fornecedor(fornecedorDto.getNome());
 		var salvo = fornecedorRepository.save(fornecedor);
+		var produtos = fornecedor.getProdutos().stream().map(x -> ProdutoResponse
+				.builder()
+				.data(x.getData())
+				.finalidade(x.getFinalidade())
+				.id(x.getId())
+				.nomeProduto(x.getNomeProduto())
+				.preco(x.getPreco())
+				.quantidade(0L)
+				.status(x.getStatus())
+				.build())
+				.toList();
+		
 		return FornecedorResponse
 				.builder()
 				.nome(salvo.getNome())
 				.id(salvo.getId())
-				.produtos(salvo.getProdutos())
+				.produtos(produtos)
 				.build();
 	}
 	
@@ -40,11 +53,24 @@ public class FornecedorService {
 		
 		try {
 			Fornecedor fornecedor = fornecedorRepository.getReferenceById(id);
+			var quantidade = estoqueRepository.encontrarEstoquesPorIdFornecedor(id).getBody();
+			var produtos = fornecedor.getProdutos().stream().map(x -> ProdutoResponse
+					.builder()
+					.data(x.getData())
+					.finalidade(x.getFinalidade())
+					.id(x.getId())
+					.nomeProduto(x.getNomeProduto())
+					.preco(x.getPreco())
+					.quantidade(quantidade.getOrDefault(fornecedor.getId(), 0L))
+					.status(x.getStatus())
+					.build())
+					.toList();
+			
 			return FornecedorResponse
 					.builder()
 					.nome(fornecedor.getNome())
 					.id(fornecedor.getId())
-					.produtos(fornecedor.getProdutos())
+					.produtos(produtos)
 					.build();
 		}
 		catch(EntityNotFoundException e) {

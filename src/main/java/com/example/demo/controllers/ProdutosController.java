@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.demo.entities.Movimentacao;
-import com.example.demo.entities.Produto;
 import com.example.demo.entities.dtos.MovimentacaoRequest;
 import com.example.demo.entities.dtos.ProdutoRequest;
 import com.example.demo.entities.dtos.ProdutoResponse;
@@ -126,7 +125,7 @@ public class ProdutosController {
 			@ApiResponse(responseCode = "400", description = "Parametros inválidos.")
 	})
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id, @RequestBody ProdutoResponse produto){
+	public ResponseEntity<Void> atualizarProduto(@PathVariable Long id, @RequestBody ProdutoResponse produto){
 		
 		produtosService.updateProduto(id, produto);
 		return ResponseEntity.noContent().build();
