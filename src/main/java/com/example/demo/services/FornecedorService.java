@@ -61,7 +61,7 @@ public class FornecedorService {
 					.id(x.getId())
 					.nomeProduto(x.getNomeProduto())
 					.preco(x.getPreco())
-					.quantidade(quantidade.getOrDefault(fornecedor.getId(), 0L))
+					.quantidade(quantidade.getOrDefault(x.getId(), 0L))
 					.status(x.getStatus())
 					.build())
 					.toList();
